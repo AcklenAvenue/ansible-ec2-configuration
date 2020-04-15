@@ -1,0 +1,91 @@
+---
+- name: test connection
+  ping:
+
+- name: "update apt packages."
+  become: true
+  become_method: sudo
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: true
+  apt:
+    upgrade: yes
+
+- name: remove unneeded apt packages from update_cache
+  apt:
+    autoclean: yes
+
+- name: remove dependencies that are no longer required
+  apt:
+    autoremove: yes
+
+- name: "install dependencies."
+  become: true
+  apt:
+    name: [
+      'apt-transport-https',
+      'ca-certificates',
+      'software-properties-common',
+      'gnupg-agent',
+      'ca-certificates',
+      'curl',
+      'software-properties-common',
+      'python3-pip'
+    ]
+    state: latest
+    update_cache: yes
+
+- name: install the GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: "setup an stable apt repository."
+  become: true
+  become_method: sudo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+    update_cache: yes
+
+- name: "update apt packages."
+  become: true
+  become_method: sudo
+  apt:
+    update_cache: yes
+
+- name: "install docker-ce."
+  become: true
+  become_method: sudo
+  apt:
+    name: [
+        'docker-ce'
+    ]
+    state: present
+    update_cache: yes
+    install_recommends: yes
+  notify: start docker on boot
+
+- name: "install python modules for docker."
+  become: true
+  become_method: sudo
+  pip:
+    name: [
+        'docker-py',
+    ]
+    state: present
+
+- name: install python awscli modules
+  pip:
+    name: "{{ item.name }}"
+    state: present
+  with_items:
+    - { name: awscli }
+
+- name: uninstall golang-docker-credential-helpers
+  apt:
+    name: golang-docker-credential-helpers
+    state: absent
+    update-cache: yes

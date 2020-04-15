@@ -1,0 +1,7 @@
+- name: Installing docker and other configurations to ec2
+  hosts: localhost
+  gather_facts: no
+  remote_user: ubuntu
+  become: yes
+  roles:
+    - installation
