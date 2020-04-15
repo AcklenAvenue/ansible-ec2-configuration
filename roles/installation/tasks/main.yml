@@ -66,6 +66,16 @@
     state: present
     update_cache: yes
     install_recommends: yes
+  notify: start docker on boot
+
+- name: "install python modules for docker."
+  become: true
+  become_method: sudo
+  pip:
+    name: [
+        'docker-py',
+    ]
+    state: present
 
 - name: install python awscli modules
   pip:
@@ -73,3 +83,9 @@
     state: present
   with_items:
     - { name: awscli }
+
+- name: uninstall golang-docker-credential-helpers
+  apt:
+    name: golang-docker-credential-helpers
+    state: absent
+    update-cache: yes
