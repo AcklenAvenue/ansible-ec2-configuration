@@ -1,18 +1,4 @@
 ---
-- name: test connection
-  ping:
-
-- name: "update apt packages."
-  become: true
-  become_method: sudo
-  apt:
-    update_cache: yes
-
-- name: "upgrade packages"
-  become: true
-  apt:
-    upgrade: yes
-
 - name: remove unneeded apt packages from update_cache
   apt:
     autoclean: yes

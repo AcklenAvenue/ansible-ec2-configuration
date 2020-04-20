@@ -1,0 +1,6 @@
+---
+
+- name: Stop a container
+  docker_container:
+    name: "{{ project_name }}-tmp"
+    state: stopped
