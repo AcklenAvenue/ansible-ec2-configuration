@@ -13,7 +13,7 @@
        Environment="AWS_ACCESS_KEY_ID={{ 'AWS_ACCESS_KEY_ID' }}"
        Environment="AWS_SECRET_ACCESS_KEY={{ 'AWS_SECRET_ACCESS_KEY' }}"
        Environment="{{ project_name }}-tmp"
-       Environment="{{ lookup('env', 'IMAGE') }}"
+       Environment="{{'IMAGE'}}"
        Environment="{{ lookup('env', 'AWSLOGSGROUP') }}"
        Environment="{{ lookup('env', 'AWSLOGSSTREAM') }}"
        Environment="{{ lookup('env', 'DB_CONNECTION') }}"
