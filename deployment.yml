@@ -7,8 +7,8 @@
     - deployment
   vars:
       project_name: "{{name_prefix}}"
-      AWS_ACCESS_KEY_ID: "{{ AWS_ACCESS_KEY_ID }}"
-      AWS_SECRET_ACCESS_KEY: "{{ AWS_SECRET_ACCESS_KEY }}"
+      AWS_ACCESS_KEY_ID: "{{AWS_ACCESS_KEY_ID}}"
+      AWS_SECRET_ACCESS_KEY: "{{AWS_SECRET_ACCESS_KEY}}"
       IMAGE: "{{ IMAGE }}"
       AWSLOGSGROUP: "{{ AWSLOGSGROUP }}"
       AWSLOGSSTREAM: "{{ AWSLOGSSTREAM }}"
