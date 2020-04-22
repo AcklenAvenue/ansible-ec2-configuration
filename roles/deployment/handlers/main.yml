@@ -1,6 +1,7 @@
 ---
 
-- name: Stop a container
-  docker_container:
-    name: "{{ project_name }}-tmp"
-    state: stopped
+- name: start docker on boot
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
