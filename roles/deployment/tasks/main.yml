@@ -1,5 +1,12 @@
 ---
 
+- name: "logging into private docker registry and force re-authorization."
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ AWS_ACCESS_KEY_ID }}"
+    AWS_SECRET_ACCESS_KEY: "{{ AWS_SECRET_ACCESS_KEY }}"
+  become: yes
+  shell: "$(aws ecr get-login --no-include-email --region us-east-1)"
+
 - name: Creates directory
   file:
     path: /etc/systemd/system/docker.service.d/
@@ -12,12 +19,6 @@
        [Service]
        Environment="AWS_ACCESS_KEY_ID={{ AWS_ACCESS_KEY_ID }}"
        Environment="AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}"
-       Environment="{{ project_name }}-tmp"
-       Environment="{{'IMAGE'}}"
-       Environment="{{ lookup('env', 'AWSLOGSGROUP') }}"
-       Environment="{{ lookup('env', 'AWSLOGSSTREAM') }}"
-       Environment="{{ lookup('env', 'DB_CONNECTION') }}"
-       Environment="{{ lookup('env', 'JWT_ISSUER') }}"
 
 - name: Reload the daemon
   become: true
@@ -43,7 +44,7 @@
   become: true
   docker_container:
     name: "{{ project_name }}-tmp"
-    image: "{{ 'IMAGE' }}"
+    image: "{{ IMAGE }}"
     pull: "yes"
     recreate: "yes"
     restart_policy: no
@@ -54,12 +55,12 @@
     log_driver: awslogs
     log_options:
       awslogs-region: "us-east-1"
-      awslogs-group: "{{ 'AWSLOGSGROUP' }}"
-      awslogs-stream: "{{ 'AWSLOGSSTREAM' }}"
+      awslogs-group: "{{ AWSLOGSGROUP }}"
+      awslogs-stream: "{{ AWSLOGSSTREAM }}"
     env:
-      DB_CONNECTION: "{{ 'DB_CONNECTION }}"
-      JWT_ISSUER: "{{ 'JWT_ISSUER }}"
-      JWT_AUDIENCE: "{{ 'JWT_AUDIENCE }}"
+      DB_CONNECTION: "{{ DB_CONNECTION }}"
+      JWT_ISSUER: "{{ JWT_ISSUER }}"
+      JWT_AUDIENCE: "{{ JWT_AUDIENCE }}"
 
 - name: Wait for docker container
   become: true
@@ -87,7 +88,7 @@
   become: true
   docker_container:
     name: "{{ project_name }}"
-    image: "{{ 'IMAGE' }}"
+    image: "{{ IMAGE }}"
     pull: "yes"
     recreate: "yes"
     restart_policy: always
@@ -98,9 +99,9 @@
     log_driver: awslogs
     log_options:
       awslogs-region: "us-east-1"
-      awslogs-group: "{{  'AWSLOGSGROUP'  }}"
-      awslogs-stream: "{{ 'AWSLOGSSTREAM'  }}"
+      awslogs-group: "{{  AWSLOGSGROUP  }}"
+      awslogs-stream: "{{ AWSLOGSSTREAM  }}"
     env:
-      DB_CONNECTION: "{{  'DB_CONNECTION }}"
-      JWT_ISSUER: "{{  'JWT_ISSUER' }}"
-      JWT_AUDIENCE: "{{  'JWT_AUDIENCE' }}"
+      DB_CONNECTION: "{{  DB_CONNECTION }}"
+      JWT_ISSUER: "{{  JWT_ISSUER }}"
+      JWT_AUDIENCE: "{{  JWT_AUDIENCE }}"
