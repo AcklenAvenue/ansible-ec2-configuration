@@ -1,5 +1,4 @@
 ---
-
 - name: start docker on boot
   systemd:
     name: docker
